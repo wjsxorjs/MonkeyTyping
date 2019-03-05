@@ -1,0 +1,11 @@
+html
+    head
+        meta(charset="UTF-8")
+        title 식자재 재고 관리 시스템
+        link(href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css", rel="stylesheet", id="bootstrap-css")
+    body
+    
+    script.
+        window.onload=function check(){
+            if ('#{check}'=="0"){ 
+                alert(

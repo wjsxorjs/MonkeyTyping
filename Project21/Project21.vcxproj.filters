@@ -1,0 +1,36 @@
+html
+    head
+        meta(charset="UTF-8")
+        title 식자재 재고 관리 시스템
+    body
+        br
+        |
+        br
+        |
+        br
+        |
+        |
+        h1(style="text-align:title;" align="center") MeSsEnGeR
+    
+        form(action="messenger", accept-charset="utf-8", method="post" onsubmit="return button();")
+            br
+            |
+            br
+            |
+            table(align="Center")
+                tr
+                    td
+                        input(type="hidden", name="rcv", value = qry)
+                    td
+                        br
+                        |
+                        br
+                        |
+                tr
+                    td 받는 사람: #{qry}
+                    td 
+                        input(type="hidden", name="snd", value=rid)
+                    td
+                        br
+                        |
+                      

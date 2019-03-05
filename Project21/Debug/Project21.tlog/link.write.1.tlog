@@ -1,0 +1,13 @@
+﻿임베디드 해야할 것
+
+동기, 시장조사
+
+if(eth.accounts[i]==cust[j]){}
+else if(eth.accounts[i]==host[j]){}
+else if(eth.accounts[i]==KRC[j]){}
+else{printf("FO");}
+
+1. solidity(스마트 컨트랙트) 만들기
+2. solidity 컴파일
+3. 컴파일한 주소(?)를 이용하여 web3.js와 backend 설계
+4.
