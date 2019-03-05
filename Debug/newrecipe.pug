@@ -1,0 +1,166 @@
+html
+  head
+    meta(charset="utf-8")
+    meta(http-equiv="X-UA-Compatible", content="IE=edge")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    title 식자재 재고관리
+    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css")
+    link(href="http://bootstrapk.com/examples/dashboard/dashboard.css", rel="stylesheet")
+    style.
+        
+        .dropdown-content {
+
+            position: absolute;
+            background-color: #f5f5f5;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: #337AB7;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+
+        .dropdown-content a:hover {background-color: #F5F5F5}
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        table {
+            border-spacing: 0px;
+            border-collapse: separate;
+        }
+        
+  body
+    nav(class="navbar navbar-inverse navbar-fixed-top")
+      div(class="container-fluid")
+        div(class="navbar-header")
+          button(type="button", class="navbar-toggle collapsed", data-toggle="collapse", data-target="#navbar", aria-expanded="false", aria-controls="navbar")
+            span(class="sr-only") Toggle navigation
+            span(class="icon-bar")
+            span(class="icon-bar")
+            span(class="icon-bar")
+          a(class="navbar-brand", href="/main") 식자재 재고관리
+        div(id="navbar", class="navbar-collapse collapse")
+          ul(class="nav navbar-nav navbar-right")
+            li
+                a(href="/main") 재고량
+            li
+                a(href="/mypage") 마이페이지
+            li
+                a(href="/delete") 회원탈퇴
+            li
+                a(href="/logout") 로그아웃
+          form(class="navbar-form navbar-right")
+            input(type="text", class="form-control", placeholder="Search...")
+
+    div(class="container-fluid")
+        div(class="row")
+            div(class="col-sm-3 col-md-2 sidebar")
+                ul(class="nav nav-sidebar")
+                    li
+                        a(href="/main") Overview 
+                    li
+                        a(href="/send") 메일보내기
+                    li  
+                        a(href="/recieve") 받은메일
+                    li
+                        a(href="/stockeditor") 재고관리
+                    li
+                        a(href="/opencheck") 열람기록확인
+                    li(class="dropdown; active")
+                        a(href="#", class="dropbtn") 신규추가
+                        div(class="dropdown-content")
+                            a(href="/newmenu") 메뉴추가
+                            a(href="/newinven") 재고추가
+                            a(href="/newrecipe") 레시피추가
+        -if(chk==0){
+            script.
+                alert("중복된 메뉴가 존재합니다. 다시 입력해주세요");
+        -}
+            div(class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main")
+                h2(class="sub-header") 레시피추가
+                    div(class="table-responsive")
+                        form(method="post", action="/newrecipe", name="f1", onsubmit="checkIt();")
+                            table(align="center", id="tt", name="tt")
+                                tr
+                                    th 메뉴이름
+                                    th 식자재명
+                                    th 사용량(g)
+                                    th 
+                                        input(class="btn btn-lg btn-primary btn-block", type="button", value="추가", onclick="myFunction()", style="width:100%")
+                                tr(style="height:40px", name="tarow")
+                                    td
+                                        select(class="form-control", name="sel1", style = "font-size:14px;padding:5px;width:85%;", required)
+                                            -for(i in menu)
+                                                option(value=mnum[i].MENU_NUM) #{menu[i].MENU_NAME}
+                                    td
+                                        select(class="form-control", name="sel2", style = "font-size:14px;padding:5px;width:85%;",  required)
+                                            -for(i in iname)
+                                                option(value=inum[i].INGREDIENT_NUM) #{iname[i].INGREDIENT_NAME}
+                                    td
+                                        input(type="text", name="con", value='7', class="form-control", style="width:70%;font-size:14px", onkeydown="if(event.keyCode < 45 || event.keyCode > 57){ if(event.keyCode==8){ event.returnValue = true; }else{ event.returnValue = false;}}", required)
+                                    td
+                                        input(class='btn', type='button', value='-', name="btn", onclick='rowDel(this)', style='width:10%;background:transparent', onmouseover='this.style.background="#C3C3C3"', onmouseout='this.style.background="transparent"')
+                            input(type="submit", class="btn btn-lg btn-primary btn-block", value="레시피추가완료", style = "font-size:14px;padding:6px;width:10%;")
+                            input(type="hidden", value=1, name="count", id="count")
+                            input(type="hidden", value=menu, name="menu", id="menu")
+                            input(type="hidden", value=mnum, name="mnum", id="mnum")
+                            input(type="hidden", value=iname, name="iname", id="iname")
+                            input(type="hidden", value=inum, name="inum", id="inum")
+                            
+
+            script.
+                var count=1;
+                function checkIt(){
+                    return true;
+                }
+                function myFunction() {
+                    var count = document.getElementById("count");
+                    count.value++;
+                    var table = document.getElementById("tt");
+                    var row = table.insertRow(table.length);
+                    row.setAttribute("style","height:40px");
+                    row.setAttribute("valign", "middle");
+                    row.setAttribute("name", "tarow");
+                    var x1 = row.insertCell(0);
+                    var x2 = row.insertCell(1);
+                    var x3 = row.insertCell(2);
+                    var x4 = row.insertCell(3);
+
+                    var menu=document.getElementById("menu").value;
+                    menu = eval(menu);
+                    var mnum=document.getElementById("mnum").value;
+                    mnum = eval(mnum);
+                    var iname=document.getElementById("iname").value;
+                    iname = eval(iname);
+                    var inum=document.getElementById("inum").value;
+                    inum = eval(inum);
+
+                    temp = '<select class="form-control" name="sel1" style = "font-size:14px;padding:5px;width:85%;" required>';
+                    for(i in menu)
+                        temp += '<option value='+ mnum[i].MENU_NUM+'>' +menu[i].MENU_NAME +'</option>'
+                    temp += '</select>';
+
+                    var temp2 = '<select class="form-control" name="sel2" style = "font-size:14px;padding:5px;width:85%;" required>';
+                    for(i in iname)
+                        temp2 += '<option value='+ inum[i].INGREDIENT_NUM+'>' +iname[i].INGREDIENT_NAME +'</option>'
+                    temp2 += '</select>';
+
+                    x1.innerHTML = temp;
+                    x2.innerHTML = temp2;
+                    x3.innerHTML = '<input type="text" name="con" value="1" class="form-control" style="width:70%;font-size:14px" onkeydown="if(event.keyCode < 45 || event.keyCode > 57) if(event.keyCode==8||event.keycode==37||event.keycode==39||event.keycode==9) event.returnValue = true; else event.returnValue = false;" required>'
+                    x4.innerHTML = "<input class='btn' type='button' value='-' name='btn' onclick='rowDel(this)' style='width:10%;background:transparent' onmouseover='this.style.background=\"#C3C3C3\"' onmouseout='this.style.background=\"transparent\"'>";
+                }   
+                function rowDel(obj)
+                {
+                    var count = document.getElementById("count");
+                    count.value--;
+                    var tr = obj.parentNode.parentNode;
+                    tr.parentNode.removeChild(tr);
+                }

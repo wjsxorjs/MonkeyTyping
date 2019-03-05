@@ -1,0 +1,59 @@
+html
+    head
+        meta(charset="UTF-8")
+        title 식자재 재고 관리 시스템
+    body
+        br
+        |
+        br
+        |
+        br
+        |
+        |
+        h1(style="text-align:title;" align="center") MeSsEnGeR
+    
+        form(action="messenger", accept-charset="utf-8", method="post" onsubmit="return button();")
+            br
+            |
+            br
+            |
+            table(align="Center")
+                tr
+                    td
+                        input(type="hidden", name="rcv", value = qry)
+                    td
+                        br
+                        |
+                        br
+                        |
+                tr
+                    td 받는 사람: #{qry}
+                    td 
+                        input(type="hidden", name="snd", value=rid)
+                    td
+                        br
+                        |
+                        br
+                        |
+                tr
+                    td 보내는 메시지
+                    td 
+                        input(type="text", name="msg", placeholder="메시지를 입력하시오...", style = "font-size:16px;padding:5px; width:300px;")
+                    td
+                        br
+                        br
+                tr
+                    td 
+                        input(type="submit" value="보내기", style = "font-size:16px;padding:5px")
+            script.
+                function button(){
+                    var check = confirm("메시지를 보내시겠습니까?");
+                    if(check){
+                        alert("전송되었습니다.");
+                        return true;
+                        }  
+                    else{ 
+                        alert("취소하셨습니다.");
+                        return false;
+                        }
+                }

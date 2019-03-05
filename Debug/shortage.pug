@@ -1,0 +1,151 @@
+html
+  head
+    meta(charset="utf-8")
+    meta(http-equiv="X-UA-Compatible", content="IE=edge")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    title 식자재 재고관리
+    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css")
+    link(href="http://bootstrapk.com/examples/dashboard/dashboard.css", rel="stylesheet")
+    style.
+        table{border-collapse: collapse;width: 50%;} th, td {text-align: center;padding: 8px;}tr:nth-child(even){background-color: #f2f2f2}tr:nth-child(odd){background-color: #f2f2f2}
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f5f5f5;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: #337AB7;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+
+        .dropdown-content a:hover {background-color: #F5F5F5}
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+  body   
+    nav(class="navbar navbar-inverse navbar-fixed-top")
+      div(class="container-fluid")
+        div(class="navbar-header")
+          button(type="button", class="navbar-toggle collapsed", data-toggle="collapse", data-target="#navbar", aria-expanded="false", aria-controls="navbar")
+            span(class="sr-only") Toggle navigation
+            span(class="icon-bar")
+            span(class="icon-bar")
+            span(class="icon-bar")
+          a(class="navbar-brand", href="/main") 식자재 재고관리
+        div(id="navbar", class="navbar-collapse collapse")
+          ul(class="nav navbar-nav navbar-right")
+            li
+                a(href="/main") 재고량
+            li
+                a(href="/mypage") 마이페이지
+            li
+                a(href="/delete") 회원탈퇴
+            li
+                a(href="/logout") 로그아웃
+          form(class="navbar-form navbar-right")
+            input(type="text", class="form-control", placeholder="Search...")
+
+    div(class="container-fluid")
+        div(class="row")
+            div(class="col-sm-3 col-md-2 sidebar")
+                ul(class="nav nav-sidebar")
+                    li(class="active")
+                        a(href="/main") Overview 
+                            span(class="sr-only") (current)
+                    li
+                        a(href="/send") 메일보내기
+                    li  
+                        a(href="/recieve") 받은메일
+                    li
+                        a(href="/stockeditor") 재고관리
+                    li
+                        a(href="/opencheck") 열람기록확인
+                    li(class="dropdown")
+                        a(href="#", class="dropbtn") 신규추가
+                        div(class="dropdown-content")
+                            a(href="/newmenu") 메뉴추가
+                            a(href="/newinven") 재고추가
+                            a(href="/newrecipe") 레시피추가
+            div(class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main")
+
+                h2(class="sub-header") #{result[0].SHOP_NAME}
+                div(class="table-responsive")
+                    -var Today = new Date('05/10/2018')
+                    -var utest = new Array
+                    table(align="center")
+                        tr
+                            th 식당이름
+                            th 주소/전화번호 열람
+                            th 재료
+                            th 여분
+                        ul
+                            -for(i in result)
+                                -var count=0             
+                                -for(j in utest)
+                                    -if (result[i].USER_ID==utest[j])
+                                        -count++
+                                -if(count==0)
+                                    -utest.push(result[i].USER_ID)
+                                    -var USE_DATE = result[i].RECEIVED_DATE.getDate()+result[i].USE_BY_DATE
+                                    -result[i].RECEIVED_DATE.setDate(USE_DATE)
+                                    -var interval = result[i].Next_Delivery_Date.getTime()-Today.getTime()
+                                    -var intervalday = Math.floor(interval/86400000)
+                                    -var temp = result[i].DAILY_CONSUM*result[i].CONSUMTION
+                                    -for(var j=i ; j<result.length && result[j].SHOP_NAME==result[i].SHOP_NAME ; j++)
+                                        -if(result[i].MENU_NUM!=result[j].MENU_NUM)
+                                            -temp+=result[j].DAILY_CONSUM*result[j].CONSUMTION
+                                    -var extra = (result[i].INVENTORY-(temp*intervalday))
+                                    -if(extra>0)
+                                            tr
+                                                td 
+                                                    input(
+                                                        type='button'
+                                                        class='btn-link'
+                                                        value = result[i].SHOP_NAME
+                                                        style = "font-size:14px"
+                                                        onclick= "popup('"+result[i].USER_ID+"','"+qry+"');"
+                                                        )
+                                                td 
+                                                    form(name="f2", method='POST', action='/shortage', onsubmit="return button('"+result[i].ADDRESS+"','"+result[i].PHONE_NUMBER+"');") 
+                                                        input(type="hidden", name='opener', value=qry , sytle="border:0")
+                                                        input(type="hidden", name='opened_user', value= result[i].USER_ID, style="border:0")
+                                                        input(type="hidden", name='ING', value= ing, style="border:0")
+                                                        input(
+                                                            type='submit'
+                                                            name='btn_is_confirm'
+                                                            id='btn_is_confirm'
+                                                            value='정보 열람하기'
+                                                            )
+                                                td #{result[i].INGREDIENT_NAME}
+                                                td #{extra}
+
+                                                
+                                                
+                                script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js")
+                                script(src="http://bootstrapk.com/dist/js/bootstrap.min.js")
+                                script(src="http://bootstrapk.com/assets/js/vendor/holder.js")
+                                script(src="http://bootstrapk.com/assets/js/ie10-viewport-bug-workaround.js")
+                                script.
+                                    function button(){
+                                        var check = confirm("개인정보를 열람하시겠습니까? 열람 사실은 전부 기록됩니다."); 
+                                        if(check){
+                                            alert(arguments[0] + " 전화번호: " + arguments[1]);
+                                            return true;
+                                            }
+                                        else {
+                                            alert("취소하셨습니다.");
+                                            return false;
+                                            }
+                                    }
+                                    function popup(){
+                                                    var settings = 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, width=550, height=500';
+                                                    window.open("/messenger?"+arguments[0], "title", settings);   
+                                                    }
